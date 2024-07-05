@@ -13,4 +13,4 @@ Notice the facility number 084, and the user ID number 31066. This badge is scan
 ![image](https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/0a71d118-0143-4e7d-8a82-0d9ad88de297)
 
 # To Run
-In order to take advantage of this plug-in, you need to use a salea logic analyizer as well as the [supporting software] (https://www.saleae.com/pages/downloads). You will also need a C++ compiler, it is recommended to have Visual Studio 2022 (or Visual Studio 2017 and later).
+In order to take advantage of this plug-in, you need to use a salea logic analyizer as well as the [supporting software](https://www.saleae.com/pages/downloads). You will also need a C++ compiler, it is recommended to have Visual Studio 2022 (or Visual Studio 2017 and later).
