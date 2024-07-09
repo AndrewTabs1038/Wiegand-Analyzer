@@ -19,8 +19,11 @@ After downloading the repo, copy the Debug directory as discussed [here](https:/
 
 Once this is done, you should see the Wiegand analyzer as such:
 
+<img src="https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/c51688af-75fe-485c-93d5-9fd1079294b2" width="100" height="100"/>
+
 ![image](https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/c51688af-75fe-485c-93d5-9fd1079294b2 | width=100)
 
 Next, set your parameters, the default is set up for the standard 26-bit Wiegand:
 
 ![image](https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/6c133373-4e96-4fc4-87bd-f01424cac10b)
+<img src="IMG_LINK" width="100" height="100"/>
