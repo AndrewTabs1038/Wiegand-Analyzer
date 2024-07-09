@@ -15,4 +15,12 @@ Notice the facility number 084, and the user ID number 31066. This badge is scan
 # To Run
 In order to take advantage of this plug-in, you need to use a salea logic analyizer as well as the [supporting software](https://www.saleae.com/pages/downloads). You will also need a C++ compiler, it is recommended to have Visual Studio 2022 (or Visual Studio 2017 and later).
 
-After downloading the repo, copy the Debug directory as discussed [here](https://support.saleae.com/faq/technical-faq/setting-up-developer-directory). Note, that having the src code is not required, to use this plugin, just the Debug files. 
+After downloading the repo, copy the Debug directory as discussed [here](https://support.saleae.com/faq/technical-faq/setting-up-developer-directory). Note, that having the src code is not required to use this plugin, just the files within the debug folder. 
+
+Once this is done, you should see the Wiegand analyzer as such:
+
+![image](https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/c51688af-75fe-485c-93d5-9fd1079294b2)
+
+Next, set your parameters, the default is set up for the standard 26-bit Wiegand:
+
+![image](https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/6c133373-4e96-4fc4-87bd-f01424cac10b)
