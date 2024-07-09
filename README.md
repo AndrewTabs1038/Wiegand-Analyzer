@@ -19,7 +19,7 @@ After downloading the repo, copy the Debug directory as discussed [here](https:/
 
 Once this is done, you should see the Wiegand analyzer as such:
 
-<img src="https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/c51688af-75fe-485c-93d5-9fd1079294b2" width="100" height="100"/>
+<img src="https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/c51688af-75fe-485c-93d5-9fd1079294b2" width="1000" height="1000"/>
 
 ![image](https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/c51688af-75fe-485c-93d5-9fd1079294b2 | width=100)
 
