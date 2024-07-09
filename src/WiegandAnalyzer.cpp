@@ -6,13 +6,6 @@ using namespace std;
 #include "WiegandAnalyzerSettings.h"
 #include <AnalyzerChannelData.h>
 
-
-
-
-//https://www.paxton-access.com/wp-content/uploads/2019/03/AN1010.pdf
-
-//2 parity, 8 bit site code, 8 buit facility code and 16 bit card
-
 WiegandAnalyzer::WiegandAnalyzer()
 :	Analyzer2(),  
 	mSettings( new WiegandAnalyzerSettings() ),
