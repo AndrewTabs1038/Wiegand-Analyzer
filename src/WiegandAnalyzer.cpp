@@ -114,7 +114,6 @@ void WiegandAnalyzer::WorkerThread()
            positionD0 = D0Serial->GetSampleOfNextEdge();
             positionD1 = D1Serial->GetSampleOfNextEdge();
             
-            //If there is no Parity, then firstBit_parity and lastBit_parity are never used
 
 			if( positionD0 < positionD1 )
             {
