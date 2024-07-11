@@ -4,7 +4,7 @@ Author: Andrew Tabaczynski
 This project was devleoped as part of a larger internship project at Oak Ridge National Labratory and is being released for use by the public. 
 
 # Overview
-This is a plugin for the Saleae logic-2 software for easy-to-use analysis of the Wiegand Protocol and allows for different size site, facility, and card numbers, which the program also partitions. Data is displayed in an easy-to-read form, and also allows for multiple signals within the same measurement period. Below, is an example of the plug-in being used, first we start with the card that is being scanned in the example. 
+This is a plugin for the Saleae logic-2 software for easy-to-use analysis of the Wiegand Protocol and allows for different size site, facility, and card numbers, which the program also partitions. Data is displayed in an easy-to-read form, and also allows for multiple signals within the same measurement period. Below, is an example of the plug-in being used, first we start with the card which is being scanned. 
 
 <img src="https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/c44f9ecd-8c97-43dc-a9e9-369a1a65fe84" width="750" height="400"/>
 
