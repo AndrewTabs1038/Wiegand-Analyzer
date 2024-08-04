@@ -1,8 +1,9 @@
 # Acknowledgement
 Author: Andrew Tabaczynski
 
-This project was devleoped as part of a larger internship project at Oak Ridge National Labratory and is being released for use by the public. 
-
+ This research was supported in part by an appointment to the U.S. Department of Energy's Omni Technology Alliance Internship
+ Program, sponsored by DOE and administered by the Oak Ridge Institute for Science and Education
+ 
 # Overview
 This is a plugin for the Saleae logic-2 software for easy-to-use analysis of the Wiegand Protocol and allows for different size site, facility, and card numbers, which the program also partitions. Data is displayed in an easy-to-read form, and also allows for multiple signals within the same measurement period. Below, is an example of the plug-in being used, first we start with the card which is being scanned. 
 
