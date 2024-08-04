@@ -69,12 +69,12 @@ void WiegandAnalyzer::WorkerThread()
     vector<U64> facility_bits;
     vector<U64> card_bits;
 
-	D0Serial = GetAnalyzerChannelData( mSettings->D0Channel );
-	D1Serial = GetAnalyzerChannelData( mSettings->D1Channel );
+    D0Serial = GetAnalyzerChannelData( mSettings->D0Channel );
+    D1Serial = GetAnalyzerChannelData( mSettings->D1Channel );
 
 
-	U64 positionD0 = 0;
-	U64 positionD1 = 0;
+    U64 positionD0 = 0;
+    U64 positionD1 = 0;
 
     U64 firstBit_parity = 0;
     U64 lastBit_parity = 0; 
@@ -92,8 +92,7 @@ void WiegandAnalyzer::WorkerThread()
     
     U64 firstBit_in = 0;
     U64 lastBit_in= 0;   
-
-	bool detect_first = true;
+    bool detect_first = true;
     bool detect_last = true;
 
     bool first = true;
@@ -108,15 +107,12 @@ void WiegandAnalyzer::WorkerThread()
 	{
      
 
-		if (detect_first) {
-
-            
-           positionD0 = D0Serial->GetSampleOfNextEdge();
+	if (detect_first) 
+	{
+            positionD0 = D0Serial->GetSampleOfNextEdge();
             positionD1 = D1Serial->GetSampleOfNextEdge();
             
-
-			if( positionD0 < positionD1 )
-            {
+	 if( positionD0 < positionD1 ) {
                 firstBit_parity = positionD0;
                 D0Serial->AdvanceToNextEdge();
                 D0Serial->AdvanceToNextEdge();
