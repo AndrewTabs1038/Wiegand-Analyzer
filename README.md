@@ -12,11 +12,30 @@ This is a plugin for the Saleae logic-2 software for easy-to-use analysis of the
 Notice the facility code 084, and the user number 31066. This badge is scanned, and the communication channels between the badge reader and controller are captured within a logic analyzer. Then, doing some preliminary investigation of the signals being transmitted, it's discovered that the site length is 0, the facility is 16, and the user is 16. By entering this information within the analyzer, we can then easily read the transmitted data. Here, you can see that we uncovered the facility code and user number.
 
 <img src="https://github.com/AndrewTabs1038/Wiegand-Analyzer/assets/135442448/0a71d118-0143-4e7d-8a82-0d9ad88de297" width="1500" height="250"/>
+# To Compile yourself
+## Windows
+You will also need a C++ compiler; it is recommended to have Visual Studio 2022 (or Visual Studio 2017 and later).
+
+## Linux (Ubuntu)
+- Install/update your C++ Compiler
+```
+sudo apt update && sudo apt install build-essential
+```
+- Ensure you have internet access and can connect to [This Github Repository](https://github.com/saleae/AnalyzerSDK)
+- Build the analyzer
+```
+mkdir build
+cd build
+cmake ..
+make
+```
+- The analyzer will be output in the /Wiegand-Analyzer/build/Analyzers directory as a .so file
 
 # To Run
-In order to take advantage of this plug-in, you need to use a saleae logic analyzer as well as the [supporting software](https://www.saleae.com/pages/downloads). You will also need a C++ compiler; it is recommended to have Visual Studio 2022 (or Visual Studio 2017 and later).
+In order to take advantage of this plug-in, you need to use a saleae logic analyzer as well as the [supporting software](https://www.saleae.com/pages/downloads). 
 
-After downloading this repo, copy the Debug directory as discussed [here](https://support.saleae.com/faq/technical-faq/setting-up-developer-directory). Note, that having the src code is not required to use this plugin, just the files within the debug folder. 
+After downloading this repo, import the Debug directory containing precompiled files for Windows and Linux (Ubuntu) as discussed [here](https://support.saleae.com/faq/technical-faq/setting-up-developer-directory). 
+Note, that having the src code is not required to use this plugin, just the pre-compiled files within the debug folder. 
 
 Once this is done, you should see the Wiegand analyzer. Next, set your parameters, the default is set up for the standard 26-bit Wiegand:
 
