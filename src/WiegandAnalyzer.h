@@ -14,7 +14,8 @@ public:
 
 	virtual void SetupResults();
 	virtual void WorkerThread();
-
+    virtual void RecordFrame( U64 starting_sample, U64 ending_sample, U8 type, U64 data);
+    virtual U64 GatherBits( U32 length, U64& starting_pos, U64& ending_pos );
 	virtual U32 GenerateSimulationData( U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels );
 	virtual U32 GetMinimumSampleRateHz();
 

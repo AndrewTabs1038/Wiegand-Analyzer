@@ -1,10 +1,11 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
-using namespace std;
 #include "WiegandAnalyzer.h"
 #include "WiegandAnalyzerSettings.h"
 #include <AnalyzerChannelData.h>
+
+
+//https://www.paxton-access.com/wp-content/uploads/2019/03/AN1010.pdf
+
+//2 parity, 8 bit site code, 8 buit facility code and 16 bit card
 
 WiegandAnalyzer::WiegandAnalyzer()
 :	Analyzer2(),  
@@ -26,30 +27,8 @@ void WiegandAnalyzer::SetupResults()
 	mResults->AddChannelBubblesWillAppearOn( mSettings->D0Channel );
 }
 
-U64 binaryTotal( vector<U64> temp )
-{
-    U64 total = 0;
-    vector<U64> binary;
-
-    for( int i = temp.size() - 1; i >= 0; i-- )
-    {
-        binary.push_back( temp[ i ] );
-    }
-    for( int i = 0; i < binary.size(); i++ )
-    {
-        if( binary[ i ] == 1 )
-        {
-            total += pow( 2, i );
-        }
-    }
-
-    return total;
-}
-
 void WiegandAnalyzer::WorkerThread()
 {	
-
-    U32 length = 0;
 
     U32 site_length = mSettings->site_length;
 
@@ -57,340 +36,147 @@ void WiegandAnalyzer::WorkerThread()
 
     U32 cardid_length = mSettings->cardid_length;
    
-    U32 counter = 0;
+        
+    bool parity_one_done = false;
+	bool done_site = false;
+    bool done_facility = false;
+    bool done_card = false;
+    bool parity_two_done = false;
 
-    U8 type = 1;
-    
-
-   length = site_length + facility_length + cardid_length + 2;
-
-    vector<U64> temp; 
-    vector<U64> site_bits;
-    vector<U64> facility_bits;
-    vector<U64> card_bits;
-
-    D0Serial = GetAnalyzerChannelData( mSettings->D0Channel );
-    D1Serial = GetAnalyzerChannelData( mSettings->D1Channel );
+	D0Serial = GetAnalyzerChannelData( mSettings->D0Channel );
+	D1Serial = GetAnalyzerChannelData( mSettings->D1Channel );
 
 
-    U64 positionD0 = 0;
-    U64 positionD1 = 0;
+	U64 ending_pos = 0;
+    U64 starting_pos = 0;
 
-    U64 firstBit_parity = 0;
-    U64 lastBit_parity = 0; 
-    U64 firstBit_site = 0;
-    U64 lastBit_site = 0;
-    U64 firstBit_facility = 0;
-    U64 lastBit_facility = 0;
-    U64 firstBit_card = 0;
-    U64 lastBit_card = 0;
-    
 
-    U64 firstBit = 0;
-    U64 lastBit= 0; 
-    
-    
-    U64 firstBit_in = 0;
-    U64 lastBit_in= 0;   
-    bool detect_first = true;
-    bool detect_last = true;
+	U64 firstposition = 0;
+	U64 lastposition = 0;
 
-    bool first = true;
-    bool last = true;
-    bool site_processed = false;
-    bool facility_processed = false;
-    bool card_processed = false;
 
 	U64 data = 0;
-
 	for( ; ; )
 	{
-     
-
-	if (detect_first) 
-	{
-            positionD0 = D0Serial->GetSampleOfNextEdge();
-            positionD1 = D1Serial->GetSampleOfNextEdge();
-            
-	 if( positionD0 < positionD1 ) {
-                firstBit_parity = positionD0;
-                D0Serial->AdvanceToNextEdge();
-                D0Serial->AdvanceToNextEdge();
-                lastBit_parity = D0Serial->GetSampleNumber();
-                mResults->AddMarker( D0Serial->GetSampleNumber(), AnalyzerResults::Zero, mSettings->D0Channel );
-                temp.push_back( 0 );
-            }
-            else 
-            {
-                firstBit_parity = positionD1;
-                D1Serial->AdvanceToNextEdge();
-                D1Serial->AdvanceToNextEdge();
-                lastBit_parity = D1Serial->GetSampleNumber();
-                mResults->AddMarker( D1Serial->GetSampleNumber(), AnalyzerResults::One, mSettings->D1Channel );
-                temp.push_back( 1 );
-                
-            }
-
-           
-            counter++;
-
-
-            detect_first = false;
-		}
-
-		 if( detect_last )
+       
+        if( !parity_one_done )
         {
-            while( counter < length  && (D0Serial->DoMoreTransitionsExistInCurrentData() || D1Serial->DoMoreTransitionsExistInCurrentData()))
-            {
-             
+            data = GatherBits( 1, starting_pos, ending_pos );
+            parity_one_done = true;
+            RecordFrame( starting_pos, ending_pos, 1, data );
+        }     
 
-                if( D0Serial->DoMoreTransitionsExistInCurrentData() && D1Serial->DoMoreTransitionsExistInCurrentData() )
-               {
-                   if( D0Serial->GetSampleOfNextEdge() < D1Serial->GetSampleOfNextEdge() )
-                   {
-                       D0Serial->AdvanceToNextEdge();
-                       temp.push_back( 0 );
-                       D0Serial->AdvanceToNextEdge();
-                       counter++;
-                       mResults->AddMarker( D0Serial->GetSampleNumber(), AnalyzerResults::Zero, mSettings->D0Channel );
-
-                   }
-                   else if( D0Serial->GetSampleOfNextEdge() > D1Serial->GetSampleOfNextEdge() )
-                   {
-                       D1Serial->AdvanceToNextEdge();
-                       temp.push_back( 1 );
-                       D1Serial->AdvanceToNextEdge();
-                       counter++;
-                       mResults->AddMarker( D1Serial->GetSampleNumber(), AnalyzerResults::One, mSettings->D1Channel );
-                   }
-               }
-               else if( D0Serial->DoMoreTransitionsExistInCurrentData() )
-               {
-                   D0Serial->AdvanceToNextEdge();
-                   temp.push_back( 0 );
-                   D0Serial->AdvanceToNextEdge();
-                   counter++;
-                   mResults->AddMarker( D0Serial->GetSampleNumber(), AnalyzerResults::Zero, mSettings->D0Channel );
-
-                }
-               else if (D1Serial->DoMoreTransitionsExistInCurrentData()) {
-                   D1Serial->AdvanceToNextEdge();
-                   temp.push_back( 1 );
-                   D1Serial->AdvanceToNextEdge();
-                   counter++;
-                   mResults->AddMarker( D1Serial->GetSampleNumber(), AnalyzerResults::One, mSettings->D1Channel );
-
-                }
-
-                if( counter == 2 && site_length != 0 )
-                {
-                    positionD0 = D0Serial->GetSampleNumber();
-                    positionD1 = D1Serial->GetSampleNumber();
-
-                    if( positionD0 > positionD1 )
-                    {
-                        firstBit_site = positionD0;
-                    }
-                    else
-                    {
-                        firstBit_site = positionD1;
-                    }
-                }
-               
-                if( counter == site_length + 1 && site_length != 0)
-                {
-                    positionD0 = D0Serial->GetSampleNumber();            
-                    positionD1 = D1Serial->GetSampleNumber();  
-                    
-                    if (positionD0 > positionD1) {
-                        lastBit_site = positionD0;
-                    }
-                    else
-                    {
-                        lastBit_site = positionD1;
-                    }
-
-                }
-                else if( counter == site_length + 2 && facility_length != 0)
-                {
-                    positionD0 = D0Serial->GetSampleNumber();
-                    positionD1 = D1Serial->GetSampleNumber();
-
-                    if( positionD0 > positionD1 )
-                    {
-                        firstBit_facility = positionD0;
-                    }
-                    else
-                    {
-                        firstBit_facility = positionD1;
-                    }
-                }
-
-                else if( counter == facility_length + site_length + 1 && facility_length != 0 )
-                {
-                    positionD0 = D0Serial->GetSampleNumber();
-                    positionD1 = D1Serial->GetSampleNumber();
-
-                    if( positionD0 > positionD1 )
-                    {
-                        lastBit_facility = positionD0;
-                    }
-                    else
-                    {
-                        lastBit_facility = positionD1;
-                    }
-
-
-                }
-                else if (counter == facility_length + site_length + 2)
-                {
-                    positionD0 = D0Serial->GetSampleNumber();
-                    positionD1 = D1Serial->GetSampleNumber();
-
-                    if( positionD0 > positionD1 )
-                    {
-                        firstBit_card = positionD0;
-                    }
-                    else
-                    {
-                        firstBit_card = positionD1;
-                    }
-
-
-                } 
-                else if( counter == cardid_length + facility_length + site_length + 1)
-                {
-                    positionD0 = D0Serial->GetSampleNumber();
-                    positionD1 = D1Serial->GetSampleNumber();
-
-                    if( positionD0 > positionD1 )
-                    {
-                        lastBit_card = positionD0;
-                    }
-                    else
-                    {
-                        lastBit_card = positionD1;
-                    }
-                   
-
-                }
-               else if( counter == length)
-                {
-                    positionD0 = D0Serial->GetSampleNumber();
-                    positionD1 = D1Serial->GetSampleNumber();
-
-                    if( positionD0 > positionD1 )
-                    {
-                        firstBit = positionD0;
-                        lastBit = positionD0 + lastBit_parity - firstBit_parity;
-                    }
-                    else
-                    {
-                        firstBit = positionD1;
-                        lastBit = positionD1 + lastBit_parity - firstBit_parity;
-
-                    }
-                }
-                
-
-
-            }
-
-
-            detect_last = false;
-        }
-        else 
+        if( !done_site && !site_length == 0)
         {
-
-            if (first) {
-                data = temp[ 0 ];
-                temp[ 0 ] = 0;
-                firstBit_in = firstBit_parity;
-                lastBit_in = lastBit_parity;
-                first = false;
-                type = 1;
-
-            }
-            else if( !site_processed && site_length != 0)
-            {
-                for( int i = 1; i < site_length + 1; i++ )
-                {
-                    site_bits.push_back( temp[i] );
-                    temp[ i ] = 0;
-                }
-                firstBit_in = firstBit_site;
-                lastBit_in = lastBit_site;
-                data = binaryTotal( site_bits );
-                site_processed = true;
-                type = 2;
-            }
-            else if( !facility_processed && facility_length != 0)
-            {
-                for( int i = 1 + site_length; i < facility_length + 1 + site_length; i++ )
-                {
-                    facility_bits.push_back( temp[i] );
-                    temp[ i ] = 0;
-                }
-                firstBit_in = firstBit_facility;
-                lastBit_in = lastBit_facility;
-                data = binaryTotal( facility_bits );
-                facility_processed = true;  
-                type = 3;
-            }
-            else if( !card_processed  &&  cardid_length != 0)
-            {
-                for( int i = 1 + site_length + facility_length; i < cardid_length + facility_length + 1 + site_length; i++ )
-                {
-                    card_bits.push_back( temp[ i ] );
-                    temp[ i ] = 0;
-                }
-                firstBit_in = firstBit_card;
-                lastBit_in = lastBit_card;
-                data = binaryTotal( card_bits );
-                card_processed = true;
-                type = 4;
-            }
-
-            else if(last)
-            {
-                data = binaryTotal( temp );
-                firstBit_in = firstBit;
-                lastBit_in = lastBit;
-                last = false;
-                type = 5;
-
-
-                detect_first = true;
-                detect_last = true;
-
-                first = true;
-                last = true;
-                site_processed = false;
-                facility_processed = false;
-                card_processed = false;
-
-                counter = 0;
-                temp.clear();
-                site_bits.clear();
-                facility_bits.clear();
-                card_bits.clear();
-            }
-
-            Frame frame;
-            frame.mData1 = data;
-            frame.mFlags = 0;
-            frame.mType = type;
-            frame.mStartingSampleInclusive = firstBit_in;
-            frame.mEndingSampleInclusive = lastBit_in;
-
-            mResults->AddFrame( frame );
-            mResults->CommitResults();
-            ReportProgress( frame.mEndingSampleInclusive );
-            CheckIfThreadShouldExit();
+            data = GatherBits( site_length, starting_pos, ending_pos );
+            done_site = true;
+            RecordFrame( starting_pos, ending_pos, 2, data );
         }
+        if( !done_facility && !facility_length == 0 )
+        {
+            data = GatherBits( facility_length, starting_pos, ending_pos );
+            done_facility = true;
+            RecordFrame( starting_pos, ending_pos, 3, data );
+        }
+
+        if( !done_card && !cardid_length == 0 )
+        {
+            data = GatherBits( cardid_length, starting_pos, ending_pos );
+            done_card = true;
+            RecordFrame( starting_pos, ending_pos, 4, data );
+
+        }
+
+        if( !parity_two_done )
+        {
+            data = GatherBits( 1, starting_pos, ending_pos );
+            parity_two_done = true;
+            RecordFrame( starting_pos, ending_pos, 1, data );
+        }
+
+        if( D0Serial->DoMoreTransitionsExistInCurrentData() || D1Serial->DoMoreTransitionsExistInCurrentData() )
+        {
+            parity_one_done = false;
+            done_site = false;
+            done_facility = false;
+            done_card = false;
+            parity_two_done = false;
+        }
+		CheckIfThreadShouldExit();
+
+        
 	}
 }
 
+void WiegandAnalyzer::RecordFrame( U64 starting_sample, U64 ending_sample, U8 type, U64 data)
+{
+    Frame frame;
+    frame.mData1 = data;
+    frame.mFlags = 0;
+    frame.mType = type;
+    frame.mStartingSampleInclusive = starting_sample;
+    frame.mEndingSampleInclusive = ending_sample;
+
+    mResults->AddFrame( frame );
+    mResults->CommitResults();
+    ReportProgress( frame.mEndingSampleInclusive );
+
+}
+
+U64 WiegandAnalyzer::GatherBits(U32 length, U64& starting_pos, U64& ending_pos)
+{
+    U64 data = 0;
+
+    U64 positionD0 = 0;
+    U64 positionD1 = 0;
+    bool D0Transitions = true;
+    bool D1Transitions = true;       
+    bool ignore_D0 = false;
+    bool ignore_D1 = false;
+
+    for( U32 i = 0; i < length; i++ )
+    {
+        D0Transitions = D0Serial->DoMoreTransitionsExistInCurrentData();
+        D1Transitions = D1Serial->DoMoreTransitionsExistInCurrentData();
+        if( !( D0Transitions || D1Transitions ) )
+            return 0;
+        if( D0Transitions )
+            positionD0 = D0Serial->GetSampleOfNextEdge();
+        else
+            ignore_D0 = true;
+
+        if( D1Transitions )
+            positionD1 = D1Serial->GetSampleOfNextEdge();
+        else
+            ignore_D1 = true;
+
+        if( positionD1 < positionD0 && !ignore_D1)
+        {
+            D1Serial->AdvanceToNextEdge();
+            if( i == 0 )
+                starting_pos = D1Serial->GetSampleNumber();
+            D1Serial->AdvanceToNextEdge();
+            if( i == length - 1 )
+                ending_pos = D1Serial->GetSampleNumber();
+            mResults->AddMarker( D1Serial->GetSampleNumber(), AnalyzerResults::One, mSettings->D1Channel );
+            data |= static_cast<U64>( 1 ) << ( length - i - 1 );
+        }
+        else if(!ignore_D0)
+        {
+            D0Serial->AdvanceToNextEdge();
+            if( i == 0 )
+                starting_pos = D0Serial->GetSampleNumber();
+            D0Serial->AdvanceToNextEdge();
+            if( i == length - 1 )
+                ending_pos = D0Serial->GetSampleNumber();
+            mResults->AddMarker( D0Serial->GetSampleNumber(), AnalyzerResults::Zero, mSettings->D0Channel );
+            
+        }
+       
+        
+    }
+    return data;
+}
 
 
 bool WiegandAnalyzer::NeedsRerun()
