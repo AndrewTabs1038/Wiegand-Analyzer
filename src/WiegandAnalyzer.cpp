@@ -2,10 +2,9 @@
 #include "WiegandAnalyzerSettings.h"
 #include <AnalyzerChannelData.h>
 
-
+//Information about Wiegand here:
 //https://www.paxton-access.com/wp-content/uploads/2019/03/AN1010.pdf
 
-//2 parity, 8 bit site code, 8 buit facility code and 16 bit card
 
 WiegandAnalyzer::WiegandAnalyzer()
 :	Analyzer2(),  
@@ -38,21 +37,21 @@ void WiegandAnalyzer::WorkerThread()
    
         
     bool parity_one_done = false;
-	bool done_site = false;
+    bool done_site = false;
     bool done_facility = false;
     bool done_card = false;
     bool parity_two_done = false;
 
-	D0Serial = GetAnalyzerChannelData( mSettings->D0Channel );
-	D1Serial = GetAnalyzerChannelData( mSettings->D1Channel );
+    D0Serial = GetAnalyzerChannelData( mSettings->D0Channel );
+    D1Serial = GetAnalyzerChannelData( mSettings->D1Channel );
 
 
-	U64 ending_pos = 0;
-    U64 starting_pos = 0;
+     U64 ending_pos = 0;
+     U64 starting_pos = 0;
 
 
-	U64 firstposition = 0;
-	U64 lastposition = 0;
+      U64 firstposition = 0;
+      U64 lastposition = 0;
 
 
 	U64 data = 0;
