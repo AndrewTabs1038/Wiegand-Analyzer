@@ -24,11 +24,11 @@ public:
 	//U32 mBitRate;
 
 protected:
-	std::auto_ptr< AnalyzerSettingInterfaceChannel >	D0ChannelInterface;
-	std::auto_ptr< AnalyzerSettingInterfaceChannel >	D1ChannelInterface;
-    std::auto_ptr<AnalyzerSettingInterfaceInteger>		site_lengthInterface;
-    std::auto_ptr<AnalyzerSettingInterfaceInteger>		facility_lengthInterface;
-    std::auto_ptr<AnalyzerSettingInterfaceInteger>		cardid_lengthInterface;
+	std::unique_ptr<AnalyzerSettingInterfaceChannel> D0ChannelInterface;
+	std::unique_ptr<AnalyzerSettingInterfaceChannel> D1ChannelInterface;
+    	std::unique_ptr<AnalyzerSettingInterfaceInteger> site_lengthInterface;
+	std::unique_ptr<AnalyzerSettingInterfaceInteger> facility_lengthInterface;
+    	std::unique_ptr<AnalyzerSettingInterfaceInteger> cardid_lengthInterface;
 
 };
 
