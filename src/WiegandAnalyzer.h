@@ -23,8 +23,8 @@ public:
 	virtual bool NeedsRerun();
 
 protected: //vars
-	std::auto_ptr< WiegandAnalyzerSettings > mSettings;
-	std::auto_ptr< WiegandAnalyzerResults > mResults;
+	std::unique_ptr<WiegandAnalyzerSettings> mSettings;
+	std::unique_ptr<WiegandAnalyzerResults> mResults;
 	AnalyzerChannelData* D0Serial;
 	AnalyzerChannelData* D1Serial;
 
