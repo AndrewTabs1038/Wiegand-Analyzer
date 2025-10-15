@@ -30,11 +30,8 @@ void WiegandAnalyzer::WorkerThread()
 {	
 
     U32 site_length = mSettings->site_length;
-
     U32 facility_length = mSettings->facility_length;
-
     U32 cardid_length = mSettings->cardid_length;
-   
         
     bool parity_one_done = false;
     bool done_site = false;
@@ -45,19 +42,14 @@ void WiegandAnalyzer::WorkerThread()
     D0Serial = GetAnalyzerChannelData( mSettings->D0Channel );
     D1Serial = GetAnalyzerChannelData( mSettings->D1Channel );
 
-
-     U64 ending_pos = 0;
-     U64 starting_pos = 0;
-
-
-      U64 firstposition = 0;
-      U64 lastposition = 0;
-
+    U64 ending_pos = 0;
+    U64 starting_pos = 0;
+    U64 firstposition = 0;
+    U64 lastposition = 0;
 
 	U64 data = 0;
 	for( ; ; )
 	{
-       
         if( !parity_one_done )
         {
             data = GatherBits( 1, starting_pos, ending_pos );
@@ -83,7 +75,6 @@ void WiegandAnalyzer::WorkerThread()
             data = GatherBits( cardid_length, starting_pos, ending_pos );
             done_card = true;
             RecordFrame( starting_pos, ending_pos, 4, data );
-
         }
 
         if( !parity_two_done )
@@ -101,9 +92,7 @@ void WiegandAnalyzer::WorkerThread()
             done_card = false;
             parity_two_done = false;
         }
-		CheckIfThreadShouldExit();
-
-        
+		CheckIfThreadShouldExit();        
 	}
 }
 
@@ -119,7 +108,6 @@ void WiegandAnalyzer::RecordFrame( U64 starting_sample, U64 ending_sample, U8 ty
     mResults->AddFrame( frame );
     mResults->CommitResults();
     ReportProgress( frame.mEndingSampleInclusive );
-
 }
 
 U64 WiegandAnalyzer::GatherBits(U32 length, U64& starting_pos, U64& ending_pos)
@@ -169,14 +157,10 @@ U64 WiegandAnalyzer::GatherBits(U32 length, U64& starting_pos, U64& ending_pos)
             if( i == length - 1 )
                 ending_pos = D0Serial->GetSampleNumber();
             mResults->AddMarker( D0Serial->GetSampleNumber(), AnalyzerResults::Zero, mSettings->D0Channel );
-            
         }
-       
-        
     }
     return data;
 }
-
 
 bool WiegandAnalyzer::NeedsRerun()
 {
@@ -190,7 +174,7 @@ U32 WiegandAnalyzer::GenerateSimulationData( U64 minimum_sample_index, U32 devic
 		mSimulationDataGenerator.Initialize( GetSimulationSampleRate(), mSettings.get() );
 		mSimulationInitilized = true;
 	}
-
+    
 	return mSimulationDataGenerator.GenerateSimulationData( minimum_sample_index, device_sample_rate, simulation_channels );
 }
 

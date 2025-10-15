@@ -61,8 +61,7 @@ void WiegandAnalyzerResults::GenerateBubbleText( U64 frame_index, Channel& chann
         ss.str( "" );
 
         ss << "Facility[" << number_str << "]";
-        AddResultString( ss.str().c_str() );
-    
+        AddResultString( ss.str().c_str() );    
 	}
     else if( frame.mType == 4 )
     {
@@ -73,9 +72,6 @@ void WiegandAnalyzerResults::GenerateBubbleText( U64 frame_index, Channel& chann
 
         ss << "Card[" << number_str << "]";
         AddResultString( ss.str().c_str() );
-    
-
-
     }
 	
 }

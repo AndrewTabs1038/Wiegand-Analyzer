@@ -1,6 +1,8 @@
 #ifndef WIEGAND_ANALYZER_H
 #define WIEGAND_ANALYZER_H
 
+#pragma warning(disable : 4251)
+
 #include <Analyzer.h>
 #include "WiegandAnalyzerResults.h"
 #include "WiegandSimulationDataGenerator.h"

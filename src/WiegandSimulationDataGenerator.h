@@ -26,4 +26,4 @@ protected:
 	SimulationChannelDescriptor mSerialSimulationData;
 
 };
-#endif //WIEGAND_SIMULATION_DATA_GENERATOR
+#endif

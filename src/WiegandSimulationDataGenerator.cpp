@@ -37,16 +37,13 @@ U32 WiegandSimulationDataGenerator::GenerateSimulationData( U64 largest_sample_r
 
 void WiegandSimulationDataGenerator::CreateSerialByte()
 {
-
 	U8 byte = mSerialText[ mStringIndex ];
 	mStringIndex++;
-	if( mStringIndex == mSerialText.size() )
-		mStringIndex = 0;
 
-	//we're currenty high
-	//let's move forward a little
+	if( mStringIndex == mSerialText.size() ) mStringIndex = 0;
 
-	mSerialSimulationData.Transition();  //low-going edge for start bit
+
+	mSerialSimulationData.Transition(); 
 
 	U8 mask = 0x1 << 7;
 	for( U32 i=0; i<8; i++ )
@@ -59,7 +56,5 @@ void WiegandSimulationDataGenerator::CreateSerialByte()
 		mask = mask >> 1;
 	}
 
-	mSerialSimulationData.TransitionIfNeeded( BIT_HIGH ); //we need to end high
-
-	//lets pad the end a bit for the stop bit:
+	mSerialSimulationData.TransitionIfNeeded( BIT_HIGH );
 }

@@ -15,20 +15,18 @@ public:
 	virtual void LoadSettings( const char* settings );
 	virtual const char* SaveSettings();
 
-	
 	Channel D0Channel;
     Channel D1Channel;
     U32 site_length;
     U32 facility_length;
     U32 cardid_length;
-	//U32 mBitRate;
 
 protected:
 	std::unique_ptr<AnalyzerSettingInterfaceChannel> D0ChannelInterface;
 	std::unique_ptr<AnalyzerSettingInterfaceChannel> D1ChannelInterface;
-    	std::unique_ptr<AnalyzerSettingInterfaceInteger> site_lengthInterface;
+	std::unique_ptr<AnalyzerSettingInterfaceInteger> site_lengthInterface;
 	std::unique_ptr<AnalyzerSettingInterfaceInteger> facility_lengthInterface;
-    	std::unique_ptr<AnalyzerSettingInterfaceInteger> cardid_lengthInterface;
+	std::unique_ptr<AnalyzerSettingInterfaceInteger> cardid_lengthInterface;
 
 };
 

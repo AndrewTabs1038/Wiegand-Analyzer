@@ -106,7 +106,6 @@ const char* WiegandAnalyzerSettings::SaveSettings()
 {
 	SimpleArchive text_archive;
 
-
 	text_archive << "SaleaeWiegandAnalyzer";
     text_archive << D0Channel;
     text_archive << D1Channel;
